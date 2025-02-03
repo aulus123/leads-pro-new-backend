@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model sales_representative {
+  nm_representative String @db.Char
+  ds_email          String @db.Char
+  ph_representative String @db.Char
+  pw_representative String @db.Char
+  id_office         String @db.Char
+  id_representative Int    @default(autoincrement())
+
+  @@ignore
+}
+
+model companies {
+  id_company  Int        @id(map: "Companies_pkey") @default(autoincrement())
+  nm_company  String     @db.VarChar(255)
+  lg_logo     String?    @db.VarChar(255)
+  nr_phone    String?    @db.VarChar(15)
+  createdAt   DateTime   @db.Timestamptz(6)
+  updatedAt   DateTime   @db.Timestamptz(6)
+  pw_company  String     @db.VarChar(255)
+  ds_email    String?    @db.VarChar(45)
+  ds_endereco String?    @db.Char
+  offices     offices[]
+  services    services[]
+}
+
+model leadsHeads {
+  id_leads_head     Int          @id(map: "LeadsHeads_pkey") @default(autoincrement())
+  id_office         Int
+  nm_notesgeral     String?      @db.VarChar(255)
+  createdAt         DateTime     @db.Timestamptz(6)
+  updatedAt         DateTime     @db.Timestamptz(6)
+  id_representative Int
+  nm_client         String       @db.Char
+  nr_phoneclient    String?      @db.Char
+  ds_clientemail    String?      @db.Char
+  offices           offices      @relation(fields: [id_office], references: [id_office], onDelete: Cascade, map: "LeadsHeads_id_office_fkey")
+  leadsLines        leadsLines[]
+}
+
+model leadsLines {
+  id_leadline    Int        @id(map: "LeadsLines_pkey") @default(autoincrement())
+  id_leads_head  Int
+  id_service     Int
+  nm_notesdetail String?    @db.VarChar(255)
+  createdAt      DateTime   @db.Timestamptz(6)
+  updatedAt      DateTime   @db.Timestamptz(6)
+  leadsHeads     leadsHeads @relation(fields: [id_leads_head], references: [id_leads_head], onDelete: Cascade, map: "LeadsLines_id_leads_head_fkey")
+  services       services   @relation(fields: [id_service], references: [id_service], onDelete: Cascade, map: "LeadsLines_id_service_fkey")
+}
+
+model offices {
+  id_office   Int          @id(map: "Offices_pkey") @default(autoincrement())
+  id_company  Int
+  nm_office   String       @db.VarChar(255)
+  nr_phone    Int?
+  nm_contact  String?      @db.VarChar(255)
+  createdAt   DateTime     @db.Timestamptz(6)
+  updatedAt   DateTime     @db.Timestamptz(6)
+  ds_endereco String?      @db.Char
+  leadsHeads  leadsHeads[]
+  companies   companies    @relation(fields: [id_company], references: [id_company], onDelete: Cascade, map: "Offices_id_company_fkey")
+}
+
+model services {
+  id_service Int          @id(map: "Services_pkey") @default(autoincrement())
+  id_company Int
+  nm_service String       @db.VarChar(255)
+  createdAt  DateTime     @db.Timestamptz(6)
+  updatedAt  DateTime     @db.Timestamptz(6)
+  leadsLines leadsLines[]
+  companies  companies    @relation(fields: [id_company], references: [id_company], onDelete: Cascade, map: "Services_id_company_fkey")
+}

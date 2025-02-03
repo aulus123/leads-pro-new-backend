@@ -1,0 +1,14 @@
+GET http://localhost:3000/companies 
+
+###
+POST http://localhost:3000/companies HTTP/1.1
+content-type: application/json
+
+{
+    "nm_company": "Company A",
+    "lg_logo": "log",
+    "nr_phone": "123",
+    "pw_company": "pa",
+    "ds_email": "email@",
+    "ds_endereco": "123"
+}
