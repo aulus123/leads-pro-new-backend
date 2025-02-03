@@ -13,12 +13,12 @@ CREATE TABLE "companies" (
     "id_company" SERIAL NOT NULL,
     "nm_company" VARCHAR(255) NOT NULL,
     "lg_logo" VARCHAR(255),
-    "nr_phone" VARCHAR(15),
+    "nr_phone" VARCHAR(255),
     "createdAt" TIMESTAMPTZ(6) NOT NULL,
     "updatedAt" TIMESTAMPTZ(6) NOT NULL,
     "pw_company" VARCHAR(255) NOT NULL,
-    "ds_email" VARCHAR(45),
-    "ds_endereco" CHAR,
+    "ds_email" VARCHAR(255),
+    "ds_endereco" VARCHAR(255),
 
     CONSTRAINT "Companies_pkey" PRIMARY KEY ("id_company")
 );
